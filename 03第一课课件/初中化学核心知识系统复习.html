@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>初中化学核心知识系统复习 · 第一课</title>
+<style>
+  :root {
+    --bg: #101412;
+    --ink: #e7efe9;
+    --muted: #9aada3;
+    --dim: #6f8278;
+    --line: #2c3b34;
+    --gold: #e0b15a;
+    --mint: #8fcec0;
+    --clay: #e09a8c;
+    --panel: #18211d;
+    --panel-2: #121a17;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+  button, input { font-family: inherit; }
+  #viewport { position: relative; height: calc(100vh - 52px); overflow: hidden; }
+  #scaler { position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; margin-left: -800px; margin-top: -450px; transform-origin: center center; }
+  .slide { display: none; width: 1600px; height: 900px; padding: 52px 68px 44px; background: var(--bg); flex-direction: column; gap: 22px; }
+  .slide.active { display: flex; }
+  .kicker { color: var(--gold); letter-spacing: .14em; font-size: 18px; text-transform: uppercase; }
+  h1 { margin: 0; font-size: 58px; font-weight: 650; letter-spacing: -.02em; line-height: 1.15; }
+  h2 { margin: 0; font-size: 40px; font-weight: 650; line-height: 1.2; }
+  p { margin: 0; font-size: 26px; line-height: 1.45; }
+  .muted { color: var(--muted); }
+  .dim { color: var(--dim); font-size: 20px; }
+  .row { display: flex; gap: 22px; min-height: 0; }
+  .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+  .label { color: var(--mint); font-size: 18px; letter-spacing: .08em; }
+  table { width: 100%; border-collapse: collapse; font-size: 23px; }
+  .compact table { font-size: 20px; }
+  .compact th, .compact td { padding: 6px 10px; }
+  th, td { border-bottom: 1px solid var(--line); text-align: left; padding: 9px 10px; vertical-align: top; }
+  th { color: var(--gold); font-weight: 600; }
+  .eq { font-size: 34px; letter-spacing: .02em; color: var(--gold); background: var(--panel-2); border-left: 4px solid var(--gold); padding: 14px 18px; }
+  .eq small { display: block; color: var(--muted); font-size: 18px; margin-top: 6px; }
+  ol.steps { margin: 0; padding-left: 1.3em; font-size: 25px; line-height: 1.5; }
+  ul.clean { margin: 0; padding-left: 1.2em; font-size: 25px; line-height: 1.5; }
+  .tag { display: inline-block; border: 1px solid var(--line); color: var(--mint); border-radius: 99px; padding: 2px 10px; font-size: 16px; margin-right: 8px; }
+  .tag.warn { color: var(--gold); }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; flex: 1; min-height: 0; }
+  .split3 { display: grid; grid-template-columns: 1.1fr .9fr .9fr; gap: 18px; }
+  .q { font-size: 28px; }
+  .ans { display: none; margin-top: 10px; color: var(--mint); font-size: 23px; line-height: 1.45; }
+  .ans.open { display: block; }
+  .show-ans { align-self: flex-start; background: transparent; color: var(--gold); border: 1px solid var(--gold); border-radius: 6px; padding: 8px 14px; font-size: 18px; cursor: pointer; }
+  .tree { display: flex; gap: 28px; align-items: stretch; font-size: 24px; }
+  .node { border: 1px solid var(--line); padding: 12px 16px; border-radius: 8px; background: var(--panel); }
+  .node strong { display: block; color: var(--gold); font-size: 20px; margin-bottom: 4px; }
+  .chrome { height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-top: 1px solid var(--line); background: #0c100e; }
+  .chrome button { background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 16px; }
+  #progress { flex: 1; height: 4px; background: #24302b; border-radius: 99px; overflow: hidden; }
+  #bar { height: 100%; width: 0; background: var(--gold); }
+  #count { min-width: 88px; text-align: right; color: var(--muted); font-size: 16px; }
+  .atom { width: 280px; height: 280px; }
+  .series { display: flex; flex-wrap: wrap; gap: 8px; }
+  .series span { border: 1px solid var(--line); padding: 6px 10px; border-radius: 6px; font-size: 22px; }
+  .series span.mark { color: #101412; background: var(--gold); border-color: var(--gold); }
+  @media print {
+    @page { size: 13.333in 7.5in; margin: 0; }
+    html { zoom: 0.8; }
+    html, body { background: white; overflow: visible; height: auto; }
+    #viewport { position: static; height: auto; overflow: visible; }
+    #scaler { position: static; left: auto; top: auto; margin: 0; transform: none !important; width: auto; height: auto; }
+    .chrome { display: none !important; }
+    .slide { display: flex !important; width: 1600px; height: 900px; page-break-after: always; break-after: page; background: white; color: #1b2420; }
+    .kicker, .label, .eq, th { color: #8a5a12; }
+    .muted, .dim, .ans { color: #355248; }
+    .panel, .node, .eq { background: #f7f4ee; border-color: #d9d0c2; }
+    .tag { color: #1f6a58; border-color: #d9d0c2; }
+    .ans { display: block !important; }
+    .show-ans { display: none !important; }
+    .series span.mark { background: #e0b15a; color: #1b2420; }
+  }
+</style>
+</head>
+<body>
+<div id="viewport"><div id="scaler"></div></div>
+<div id="slides" hidden>
+<article class="slide">
+  <div class="kicker">医用化学前期 · 第一课 · 110分钟</div>
+  <h1>初中化学核心知识<br>系统复习</h1>
+  <p class="muted">面向正在学习《医用化学（第2版）》的职校学生。基础诊断已经完成，本节只讲知识。</p>
+  <div class="row">
+    <div class="panel" style="flex:1.3"><div class="label">今天要建立的体系</div><p>变化与分类、微观粒子、化学用语、化学反应、化学计算、溶液、酸碱盐、常见物质、金属、实验和其他生活知识。</p></div>
+    <div class="panel" style="flex:1"><div class="label">课件依据</div><p>12份章节课件为第1–12章。实验来自教学大纲中的实验单元，不是第13份课件。</p></div>
+  </div>
+  <p class="dim">方向键或空格翻页。练习答案由教师点击后展开。打印时每页一张幻灯片，并显示答案。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块1 · 8分钟 · 导入与概念</div>
+  <h2>先判断有没有新物质</h2>
+  <div class="split">
+    <div class="panel"><div class="label">导入</div><p>冰块变成水，物质还是水。镁条燃烧后得到白色固体，不再是原来的镁。</p></div>
+    <div class="panel"><div class="label">概念</div><p>没有生成新物质的变化是物理变化。生成新物质的变化是化学变化。</p></div>
+  </div>
+  <table>
+    <tr><th>现象</th><th>判断</th><th>依据</th></tr>
+    <tr><td>冰雪融化、酒精挥发、胆矾研碎</td><td>物理变化</td><td>状态或形状改变</td></tr>
+    <tr><td>镁条燃烧、食物腐败、铁生锈</td><td>化学变化</td><td>有新物质生成</td></tr>
+  </table>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块1 · 易错与练习</div>
+  <h2>状态改变不等于化学变化</h2>
+  <ul class="clean">
+    <li>溶解、挥发、粉碎本身通常是物理变化。发生化学反应时才生成新物质。</li>
+    <li>干冰升华只是二氧化碳由固态变成气态，仍然是二氧化碳。</li>
+  </ul>
+  <div class="panel">
+    <div class="label">随堂练习</div>
+    <p class="q">1. 干冰升华属于哪类变化？ 2. 铁在氧气中燃烧属于哪类变化？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">1. 物理变化，二氧化碳由固态变成气态，没有新物质。2. 化学变化，生成四氧化三铁。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块1 · 概念</div>
+  <h2>变化判断完，再看物质由什么组成</h2>
+  <div class="tree">
+    <div class="node"><strong>混合物</strong>由不同物质组成<br>空气、溶液</div>
+    <div class="node"><strong>纯净物</strong>由一种物质组成
+      <div class="row" style="margin-top:12px">
+        <div><b>单质</b><br>同种元素<br>O₂、Fe</div>
+        <div><b>化合物</b><br>不同元素<br>H₂O、NaCl、CuO</div>
+      </div>
+    </div>
+  </div>
+  <p>氧化物是由两种元素组成、其中一种是氧的化合物，例如 CuO、CO₂。酸、碱、盐都是化合物，后面单独学习它们的性质。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块1 · 规律与例题</div>
+  <h2>分类只看“有几种物质、有几种元素”</h2>
+  <ol class="steps">
+    <li>先看是一种物质还是几种物质：一种为纯净物，几种为混合物。</li>
+    <li>纯净物再看元素种类：一种元素是单质，多种元素是化合物。</li>
+  </ol>
+  <div class="panel">
+    <div class="label">例题</div>
+    <p>判断：氧气、氯化钠、空气、氧化铜。</p>
+    <p class="eq">O₂ 单质；NaCl 化合物；空气 混合物；CuO 氧化物，也是化合物<small>空气含氮气、氧气等，所以不是纯净物。</small></p>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块1 · 医用化学衔接</div>
+  <h2>第1章会重新使用这组分类</h2>
+  <p>课件第1章第三节“初中基础知识回顾”包含物质分类、物质的变化与性质。今天讲完整，进入第1章时不再从头铺开。</p>
+  <p>第3章按具体元素学习氧化物、酸和盐。第5章再把化合物分成电解质和非电解质，那是新内容。</p>
+  <p>这些物质无论是单质还是化合物，都由分子、原子或离子构成。下一页就看这三种粒子。</p>
+  <p class="dim">依据：第一章课件目录；第三章“医药中常见的无机元素及其化合物”；第五章“化学平衡与电解质溶液”。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块2 · 12分钟 · 导入与概念</div>
+  <h2>分子、原子、离子都能构成物质</h2>
+  <div class="split">
+    <div>
+      <p>上一页的单质和化合物，都由粒子构成。水通电后得到氢气和氧气，就是水分子被拆开，氢原子和氧原子重新组合。</p>
+      <ul class="clean">
+        <li>分子：保持物质化学性质的一种微粒，化学变化中可以再分。</li>
+        <li>原子：化学变化中的最小粒子。</li>
+        <li>离子：带电的原子或原子团。</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="label">钠原子</div>
+      <svg class="atom" viewBox="0 0 280 280" aria-label="钠原子结构示意图">
+        <circle cx="140" cy="140" r="108" fill="none" stroke="#8fcec0" stroke-width="2"/>
+        <circle cx="140" cy="140" r="74" fill="none" stroke="#8fcec0" stroke-width="2"/>
+        <circle cx="140" cy="140" r="40" fill="none" stroke="#8fcec0" stroke-width="2"/>
+        <circle cx="140" cy="140" r="18" fill="#e0b15a"/>
+        <text x="140" y="146" text-anchor="middle" fill="#101412" font-size="16">+11</text>
+        <text x="168" y="146" fill="#e7efe9" font-size="16">2</text>
+        <text x="206" y="146" fill="#e7efe9" font-size="16">8</text>
+        <text x="248" y="132" fill="#e0b15a" font-size="16">1</text>
+      </svg>
+      <p class="dim">由内向外：2、8、1。最外层1个电子。</p>
+    </div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块2 · 规律</div>
+  <h2>三种粒子数不要互相代替</h2>
+  <table>
+    <tr><th>关系</th><th>含义</th></tr>
+    <tr><td>质子数 = 核电荷数 = 原子序数</td><td>决定元素种类</td></tr>
+    <tr><td>原子中，质子数 = 核外电子数</td><td>原子整体不带电</td></tr>
+    <tr><td>质量数 ≈ 质子数 + 中子数</td><td>电子质量很小，初中暂不计入</td></tr>
+  </table>
+  <p>元素是质子数相同的一类原子的总称。最外层电子少于4个时，原子容易失去电子，形成阳离子，如钠原子形成 Na⁺。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块2 · 例题</div>
+  <h2>由结构示意图读出三项信息</h2>
+  <div class="eq">质子数 11，最外层电子数 1，形成的离子是 Na⁺<small>质子数决定它是钠元素。失去1个电子后，质子数比电子数多1。</small></div>
+  <ol class="steps">
+    <li>圈内数字是质子数，不是质量数。</li>
+    <li>最外层电子数看离核最远的那一层。</li>
+    <li>离子符号先写元素符号，再在右上角写电荷。</li>
+  </ol>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块2 · 易错与练习</div>
+  <h2>分子可分，原子在化学变化中不可再分</h2>
+  <ul class="clean">
+    <li>不能说“分子是化学变化中的最小粒子”。</li>
+    <li>失去电子形成阳离子，得到电子形成阴离子。Na⁺ 和 Cl⁻ 的电荷方向相反。</li>
+  </ul>
+  <div class="panel">
+    <p class="q">氯原子最外层有7个电子。它容易得到几个电子？形成什么离子？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">得到1个电子，形成 Cl⁻。得到电子后，电子数比质子数多1。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块2 · 医用化学衔接</div>
+  <h2>第2章从这里接着讲</h2>
+  <p>第2章课件的顺序是原子构成和同位素、核外电子排布、元素周期表，然后是元素周期律和氧化还原反应。</p>
+  <p>今天只要求读懂质子数、电子层和离子符号。同一种元素的不同原子、周期和族的递变规律，留到第2章作为新课。下一步先把这些粒子写成符号。</p>
+  <p class="dim">依据：第二章课件“物质结构”。化学键与氢键在教学大纲中是拓展，课件没有把它列成独立核心节。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块3 · 12分钟 · 导入与概念</div>
+  <h2>符号里的每个数字都有位置</h2>
+  <div class="eq">2H₂O<small>系数2：两个水分子。下标2：每个水分子中有2个氢原子。氢原子共4个，氧原子共2个。</small></div>
+  <div class="split">
+    <div class="panel"><div class="label">元素符号</div><p>H、O、Na、Cl 各表示一种元素。右上角的正负号才表示离子。</p></div>
+    <div class="panel"><div class="label">化学式</div><p>用元素符号和数字表示物质的组成。离子化合物中，正负化合价的代数和为零。</p></div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块3 · 规律</div>
+  <h2>先定元素，再定个数</h2>
+  <table>
+    <tr><th>常见化合价</th><th>例子</th></tr>
+    <tr><td>+1</td><td>H、Na、K、Ag</td></tr>
+    <tr><td>+2</td><td>Mg、Ca、Zn、Cu；Fe 还有 +3</td></tr>
+    <tr><td>+3</td><td>Al；Fe 也可为 +3</td></tr>
+    <tr><td>－2、－1</td><td>O 通常为－2；Cl 在氯化物中为－1</td></tr>
+  </table>
+  <p>书写时，正价元素一般在前。Mg 为+2、Cl 为－1，所以是 MgCl₂。Fe 为+3、O 为－2，所以是 Fe₂O₃。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块3 · 例题</div>
+  <h2>铝为+3价，氧为－2价</h2>
+  <ol class="steps">
+    <li>写出元素符号，正价在前：Al、O。</li>
+    <li>使 (+3)×2 + (－2)×3 = 0。</li>
+    <li>把个数写到右下角：Al₂O₃。</li>
+  </ol>
+  <div class="eq">Al₂O₃<small>不能写成 Al3O2，也不能把数字写到元素前面。</small></div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块3 · 易错与练习</div>
+  <h2>下标配错和位置写错要分开看</h2>
+  <ul class="clean">
+    <li>MgCl 的元素对了，但化合价代数和不为零。</li>
+    <li>2MgCl₂ 的系数表示两个化学式，不改变氯化镁本身的组成。</li>
+  </ul>
+  <div class="panel">
+    <p class="q">钙为+2价，氯为－1价。写出化学式，并说明 3CO₂ 中碳、氧原子各有多少个。</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">化学式是 CaCl₂。3CO₂ 有3个二氧化碳分子，共3个碳原子、6个氧原子。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块3 · 医用化学衔接</div>
+  <h2>化学式写好后，用它表示化学反应</h2>
+  <p>第1章直接复习化学式和化合价。后面各章的分子式都沿用今天的读法。</p>
+  <p>化学式本身还不能表示变化。下一页用刚才的化学式书写反应，并计算参加反应的质量。</p>
+  <p class="dim">依据：第一章“化学式和化合价”。化学式量与摩尔质量的关系放到质量计算之后。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块4 · 14分钟 · 概念</div>
+  <h2>先把变化写成方程式</h2>
+  <p>化学式表示物质组成。物质发生变化时，用化学方程式表示反应物和生成物。</p>
+  <div class="eq">2H₂ + O₂ → 2H₂O<small>点燃。左边和右边的氢原子、氧原子个数相同，所以系数分别是2、1、2。</small></div>
+  <p class="muted">配平时只改化学式前面的系数，不改右下角的下标。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块4 · 规律</div>
+  <h2>方程式写完，再看质量关系</h2>
+  <p>质量守恒定律：参加化学反应的各物质质量总和，等于反应后生成的各物质质量总和。</p>
+  <div class="eq">2H₂ + O₂ → 2H₂O<small>相对质量关系是 4∶32∶36。所以 4 g 氢气与 32 g 氧气恰好完全反应，生成 36 g 水。</small></div>
+  <p class="muted">没有参加反应的物质，以及逸出容器的气体，不能随意加进等式。锌和盐酸的配平也只用这个规则：Zn + 2HCl → ZnCl₂ + H₂↑。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块4 · 规律</div>
+  <h2>四种基本反应类型</h2>
+  <table>
+    <tr><th>类型</th><th>特征</th><th>例子</th></tr>
+    <tr><td>化合</td><td>多变一</td><td>2Mg + O₂ → 2MgO</td></tr>
+    <tr><td>分解</td><td>一变多</td><td>2H₂O₂ → 2H₂O + O₂</td></tr>
+    <tr><td>置换</td><td>单质 + 化合物 → 新单质 + 新化合物</td><td>Zn + 2HCl → ZnCl₂ + H₂↑</td></tr>
+    <tr><td>复分解</td><td>两种化合物交换成分</td><td>NaCl + AgNO₃ → AgCl↓ + NaNO₃</td></tr>
+  </table>
+  <p class="dim">中和反应是酸与碱生成盐和水，属于复分解。第7章的取代反应是有机反应名称，不要和置换反应混用。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块4 · 例题</div>
+  <h2>配平与判断类型分开完成</h2>
+  <div class="panel">
+    <p>完成：Fe + CuSO₄ → FeSO₄ + Cu，并判断反应类型。</p>
+    <div class="eq">Fe + CuSO₄ → FeSO₄ + Cu<small>左右原子已经守恒，系数都是1。一种单质和一种化合物生成另一种单质和另一种化合物，属于置换反应。</small></div>
+  </div>
+  <p>如果学生把 FeSO₄ 写成 FeSO₃，错误在化学式，不在系数。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块4 · 易错与练习</div>
+  <h2>不能为了配平去改下标</h2>
+  <ul class="clean">
+    <li>H₂O 不能为了凑原子数改成 H₂O₂。那已经是另一种物质。</li>
+    <li>质量守恒适用于实际参加反应的物质，不是容器里所有物质的简单相加。</li>
+  </ul>
+  <div class="panel">
+    <p class="q">配平氢气在氧气中燃烧的方程式，并说出反应类型。</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">2H₂ + O₂ → 2H₂O，点燃。多变一，属于化合反应。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块4 · 医用化学衔接</div>
+  <h2>下一步把方程式中的数字换成质量</h2>
+  <p>第1章会使用质量守恒定律和四种基本反应类型。刚才的 4∶32∶36 来自氢气、氧气和水的相对质量。</p>
+  <p>下一页先认识相对原子质量、相对分子质量和相对式量，再用它们完成这类计算。</p>
+  <p class="dim">依据：第一章课件中的质量守恒定律和化学反应类型。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块5 · 12分钟 · 概念</div>
+  <h2>用上一页的质量关系做计算</h2>
+  <p>2H₂ + O₂ → 2H₂O 的质量关系是 4∶32∶36。这些数字来自相对质量，不是随便写下的克数。</p>
+  <table>
+    <tr><th>名称</th><th>例子</th><th>是否写 g</th></tr>
+    <tr><td>相对原子质量</td><td>Na 为23，Cl 为35.5，C 为12</td><td>不写</td></tr>
+    <tr><td>相对分子质量</td><td>H₂O 为18，CO₂ 为44</td><td>不写</td></tr>
+    <tr><td>相对式量、化学式量</td><td>NaCl 为58.5</td><td>不写</td></tr>
+  </table>
+  <p>NaCl 由离子构成，称相对式量更准确。第4章新增摩尔质量：数值等于相对分子质量或化学式量，单位才是 g/mol。今天不计算摩尔。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块5 · 例题</div>
+  <h2>先相加，再进入方程式比例</h2>
+  <div class="split">
+    <div class="panel">
+      <div class="label">式量</div>
+      <div class="eq">NaCl = 23 + 35.5 = 58.5<small>58.5 g 不是相对式量，它表示质量。</small></div>
+    </div>
+    <div class="panel">
+      <div class="label">二氧化碳</div>
+      <div class="eq">CO₂ = 12 + 16 × 2 = 44<small>碳用相对原子质量，二氧化碳用相对分子质量。</small></div>
+    </div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块5 · 例题</div>
+  <h2>6 g 碳完全燃烧生成多少二氧化碳</h2>
+  <div class="eq">C + O₂ → CO₂<small>相对质量关系：12 对应 44。</small></div>
+  <ol class="steps">
+    <li>写出已配平的方程式。</li>
+    <li>在对应物质下方写出关系：碳 12，二氧化碳 44。</li>
+    <li>设二氧化碳质量为 x：12 / 6 g = 44 / x。</li>
+    <li>x = 6 g × 44 / 12 = 22 g。</li>
+  </ol>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块5 · 易错与练习</div>
+  <h2>单位和比例要同时检查</h2>
+  <ul class="clean">
+    <li>把 58.5 写成 58.5 g，是把相对式量和质量混在一起。</li>
+    <li>比例正确但算出 11 g 或 44 g，错误只发生在算术。</li>
+  </ul>
+  <div class="panel">
+    <p class="q">计算 CaCO₃ 的相对式量。钙40，碳12，氧16。</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">40 + 12 + 16 × 3 = 100。结果写作100，不写作100 g。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块5 · 医用化学衔接</div>
+  <h2>式量通往摩尔质量，守恒不走这条路</h2>
+  <p>第4章的计算链是：化学式 → 化学式量 → 摩尔质量 → 物质的量 → 物质的量浓度。摩尔质量的数值等于相对分子质量或化学式量，单位用 g/mol。</p>
+  <p>根据方程式求质量，用的是相对质量和质量守恒。浓度计算直接使用溶液的质量和体积，不把质量守恒当作前提。</p>
+  <p>这些物质在医用化学里常常配成溶液。下一页先把溶液说清楚。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块6 · 10分钟 · 导入与概念</div>
+  <h2>溶液、溶质和溶剂</h2>
+  <p>刚才写出的化学式和反应，在医用化学中常常发生在溶液里。一种或几种物质分散到另一种物质里，形成均一、稳定的混合物，就是溶液。被溶解的是溶质，溶解溶质的是溶剂。</p>
+  <p>均一、稳定的液体不一定是溶液。蒸馏水是纯净物。水是最常用的溶剂，溶质可以是固体、液体或气体。</p>
+  <div class="split">
+    <div class="panel"><div class="label">饱和溶液</div><p>一定温度下，不能再溶解某种溶质的溶液。它不一定是浓溶液。</p><p class="dim">溶解度的定量曲线在第4章课件中没有专节，这里按初中课标补充。</p></div>
+    <div class="panel"><div class="label">溶解度</div><p>一定温度下，100 g 溶剂中达到饱和时所溶解的溶质质量。</p></div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块6 · 规律与例题</div>
+  <h2>质量分数的分母是溶液质量</h2>
+  <div class="eq">溶质质量分数 = 溶质质量 / 溶液质量 × 100%</div>
+  <ol class="steps">
+    <li>5 g 氯化钠配成 200 g 溶液。</li>
+    <li>溶质质量 5 g，溶液质量 200 g。</li>
+    <li>5 g / 200 g × 100% = 2.5%。</li>
+  </ol>
+  <p>分母不是溶剂质量，也不能直接换成体积。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块6 · 易错与练习</div>
+  <h2>100 mL 不等于 100 g</h2>
+  <p>只知道 100 mL 溶液中有 0.9 g 溶质、又不知道密度时，不能计算溶质质量分数。0.9 g/100 mL 是质量浓度的表达方式，留到第4章。</p>
+  <div class="panel">
+    <p class="q">10 g 氯化钠溶于水，配成 250 g 溶液。溶质质量分数是多少？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">10 g / 250 g × 100% = 4%。列式必须使用溶液质量 250 g。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块6 · 医用化学衔接</div>
+  <h2>第4章把浓度分成几种表示</h2>
+  <p>第4章第二节依次出现物质的量浓度、质量浓度、质量分数和体积分数。质量分数要求溶质质量与溶液质量的单位相同。</p>
+  <p>教学大纲中的“溶液的配制”使用这些浓度概念。渗透压是第4章第三节的新内容，今天不展开。接下来看溶液里的酸、碱和盐。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块7 · 10分钟 · 概念</div>
+  <h2>酸、碱、盐看离子和通性</h2>
+  <table>
+    <tr><th>类别</th><th>认识要点</th><th>例子</th></tr>
+    <tr><td>酸</td><td>电离出的阳离子全部是 H⁺</td><td>HCl、H₂SO₄</td></tr>
+    <tr><td>碱</td><td>电离出的阴离子全部是 OH⁻</td><td>NaOH、Ca(OH)₂</td></tr>
+    <tr><td>盐</td><td>金属离子或铵根与酸根</td><td>NaCl、NaHCO₃、CuSO₄</td></tr>
+  </table>
+  <p>酸能使紫色石蕊变红，无色酚酞不变色。碱能使石蕊变蓝，使酚酞变红。盐没有一组同样简单的指示剂颜色。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块7 · 规律与例题</div>
+  <h2>pH 与中和反应</h2>
+  <div class="split">
+    <div class="panel"><div class="label">常温下</div><p>pH ＜ 7 酸性，pH = 7 中性，pH ＞ 7 碱性。pH 由3变为6，酸性减弱，但仍然是酸性。</p></div>
+    <div class="panel"><div class="label">中和</div><div class="eq">HCl + NaOH → NaCl + H₂O<small>酸与碱生成盐和水。这是中和反应。</small></div></div>
+  </div>
+  <p>NaHCO₃ 能与盐酸反应，但碳酸氢钠是盐，不是碱。这个反应不要叫成碱的中和通性。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块7 · 易错与练习</div>
+  <h2>先看 pH 方向，再分清碱和盐</h2>
+  <ul class="clean">
+    <li>pH 由3变为6，酸性减弱，溶液仍然呈酸性。</li>
+    <li>NaHCO₃ 能与盐酸反应，但它是盐，不是碱。中和反应只指酸与碱生成盐和水。</li>
+  </ul>
+  <div class="panel">
+    <p class="q">1. pH = 9 的溶液显什么性？酚酞呈什么颜色？ 2. 写出盐酸与氢氧化钠反应的方程式。</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">1. 碱性，酚酞变红。2. HCl + NaOH → NaCl + H₂O。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块7 · 医用化学衔接</div>
+  <h2>定性判断现在够用，计算留到第5章</h2>
+  <p>第1章只回顾溶液酸碱度。第5章才系统学习强弱电解质、水的电离、pH、盐溶液酸碱性和缓冲溶液。</p>
+  <p>pH 的对数计算、缓冲对和盐类水解留到第5章。下一页看这些反应里反复出现的氧气、二氧化碳和水。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块8 · 6分钟 · 常见物质</div>
+  <h2>空气、氧气、二氧化碳和水</h2>
+  <table>
+    <tr><th>物质</th><th>核心事实</th></tr>
+    <tr><td>空气</td><td>混合物。按体积计，氮气约占78%，氧气约占21%。</td></tr>
+    <tr><td>氧气</td><td>能支持燃烧。氧气本身通常不是可燃物。</td></tr>
+    <tr><td>二氧化碳</td><td>CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O，石灰水变浑浊。</td></tr>
+    <tr><td>水</td><td>2H₂O → 2H₂↑ + O₂↑。氢气与氧气体积比约为2∶1。</td></tr>
+  </table>
+  <p class="dim">选项中能使澄清石灰水变浑浊的是 CO₂。选项没有二氧化硫，不能由此推广到所有气体。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块8 · 练习与衔接</div>
+  <h2>性质直接服务第3章的具体物质</h2>
+  <div class="panel">
+    <p class="q">硫在氧气中燃烧，氧气在这里起什么作用？电解水得到的两种气体，体积比约是多少？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">氧气支持硫燃烧。氢气与氧气的体积比约为2∶1。</div>
+  </div>
+  <p>第3章会具体学习氧、硫、氮以及钠、钙、铝、铁、锌的化合物。镁条、碳和硫的燃烧都用到氧气，下一页把燃烧条件放在一起。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块8 · 燃烧条件</div>
+  <h2>氧气只是燃烧的条件之一</h2>
+  <ul class="clean">
+    <li>燃烧需要可燃物、氧气，以及温度达到着火点。</li>
+    <li>去掉其中一个条件，火就会熄灭。</li>
+    <li>前面的镁、碳、硫能燃烧，是因为它们是可燃物，氧气负责支持燃烧。</li>
+  </ul>
+  <div class="panel">
+    <div class="label">随堂练习</div>
+    <p class="q">油锅着火时盖上锅盖。它主要破坏了哪一个条件？着火点会不会因此改变？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">主要隔绝氧气或空气。着火点是物质的性质，不会因为盖锅盖而降低。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块9 · 6分钟 · 金属</div>
+  <h2>从铁和硫酸铜看出活动性顺序</h2>
+  <p>前面写过 Fe + CuSO₄ → FeSO₄ + Cu。铁能把硫酸铜里的铜置换出来，是因为铁排在铜前面。</p>
+  <div class="series">
+    <span>K</span><span>Ca</span><span>Na</span><span>Mg</span><span>Al</span><span>Zn</span><span>Fe</span><span>Sn</span><span>Pb</span><span class="mark">H</span><span>Cu</span><span>Hg</span><span>Ag</span><span>Pt</span><span>Au</span>
+  </div>
+  <ul class="clean">
+    <li>排在氢前的金属能与稀盐酸或稀硫酸反应，产生氢气。</li>
+    <li>前面的金属可以把后面的金属从其盐溶液中置换出来。</li>
+    <li>钾、钙、钠会先与水剧烈反应，不用它们做盐溶液置换实验。</li>
+  </ul>
+  <div class="eq">2Al + 3CuSO₄ → Al₂(SO₄)₃ + 3Cu<small>铝在铜前，反应可以发生。铜与稀盐酸不能发生置换。</small></div>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块9 · 练习与衔接</div>
+  <h2>按顺序判断，不靠临时观察</h2>
+  <div class="panel">
+    <p class="q">根据金属活动性顺序，Cu 与 ZnSO₄ 溶液、Al 与 CuSO₄ 溶液，哪一个能够发生？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">Al 与 CuSO₄ 溶液能够发生。铜位于锌后面，不能从硫酸锌中置换锌。</div>
+  </div>
+  <p>第1章有金属活动性回顾。第3章具体学习钠、钙、铝、铁、锌，不把镁列成与它们同级的独立核心节。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块10 · 6分钟 · 实验安全</div>
+  <h2>这些反应要在实验室里做</h2>
+  <p>金属置换、制取气体和溶液配制都要先保证操作安全。先记住三项。</p>
+  <table>
+    <tr><th>操作</th><th>正确方法</th></tr>
+    <tr><td>稀释浓硫酸</td><td>把浓硫酸沿器壁慢慢注入水中，并搅拌</td></tr>
+    <tr><td>闻气体</td><td>用手轻轻扇动，使极少量气体进入鼻腔</td></tr>
+    <tr><td>熄灭酒精灯</td><td>用灯帽盖灭，不能用嘴吹</td></tr>
+  </table>
+  <p>水倒入浓硫酸会剧烈放热。顺序写反，即使两种物质都写出来，实验仍然不安全。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块10 · 气体制备 · 课标补充</div>
+  <h2>发生装置看反应物状态和是否加热</h2>
+  <table>
+    <tr><th>气体</th><th>常见反应</th><th>收集</th></tr>
+    <tr><td>氧气</td><td>2H₂O₂ → 2H₂O + O₂，二氧化锰催化</td><td>排水法，或向上排空气</td></tr>
+    <tr><td>二氧化碳</td><td>CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑</td><td>向上排空气。二氧化碳能溶于水，不用排水法作为主要方法</td></tr>
+  </table>
+  <p class="dim">这是初中课程标准中的实验内容。医用化学教学大纲列出的是基本操作、粗盐提纯和溶液配制，没有气体制取实验。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块10 · 练习与衔接</div>
+  <h2>实验衔接只对应大纲中的三项</h2>
+  <div class="panel">
+    <p class="q">稀释浓硫酸时，哪种液体倒入哪种液体？二氧化碳为什么通常不用排水法收集？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">浓硫酸注入水中。二氧化碳能溶于水，排水法损失气体，通常用向上排空气法。</div>
+  </div>
+  <p>溶液配制前要能区分质量和体积。气体制取今天只建立框架，不作为医用化学实验课的必考项目。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块11 · 课标补充</div>
+  <h2>化肥、材料、能源与环境</h2>
+  <p>燃烧条件已经接在氧气后面。这里只补医用化学课件没有单列的生活框架。</p>
+  <div class="panel">
+    <p>氮肥主要促进叶的生长，磷肥主要促进根和果实，钾肥主要增强茎秆和抗性。材料分为金属、无机非金属和有机合成材料。燃料使用关系到资源和环境。</p>
+  </div>
+  <p class="dim">第3章只有铵盐可作肥料、二氧化硫污染等散点；第7章会重新讲可燃性。这些内容遇到具体物质再补充。</p>
+</article>
+
+<article class="slide">
+  <div class="kicker">模块11 · 练习</div>
+  <h2>只判断肥料的主要作用</h2>
+  <div class="panel">
+    <p class="q">促进叶生长、促进根和果实、增强茎秆，分别主要对应哪一类肥料？</p>
+    <button class="show-ans" type="button">显示答案</button>
+    <div class="ans">依次是氮肥、磷肥、钾肥。这是初中课标中的框架，不是医用化学第3章的独立计算内容。</div>
+  </div>
+</article>
+
+<article class="slide">
+  <div class="kicker">收束 · 6分钟</div>
+  <h2>进入教材前，只按位置衔接</h2>
+  <table>
+    <tr><th>后续位置</th><th>今天已经准备的基础</th></tr>
+    <tr><td>第1章化学式</td><td>系数、下标、化合价和离子符号</td></tr>
+    <tr><td>第2章原子结构</td><td>质子数、电子层、离子形成</td></tr>
+    <tr><td>第3章元素化合物</td><td>常见物质和金属活动性顺序</td></tr>
+    <tr><td>第4章物质的量与浓度</td><td>相对式量、溶液和质量分数</td></tr>
+    <tr><td>第5章酸碱与pH</td><td>酸、碱、盐的定性判断</td></tr>
+    <tr><td>大纲实验</td><td>基本操作和溶液配制所需的质量、体积意识</td></tr>
+  </table>
+  <p>下一节开始第1章“化学的研究对象”和“化学与医学”。质量守恒留在方程式计算中单独使用。</p>
+</article>
+
+<article class="slide compact">
+  <div class="kicker">教师计时 · 合计110分钟</div>
+  <h2>时间分配</h2>
+  <table>
+    <tr><th>时段</th><th>内容</th><th>分钟</th></tr>
+    <tr><td>0–4</td><td>说明本节任务</td><td>4</td></tr>
+    <tr><td>4–12</td><td>1 变化，然后分类</td><td>8</td></tr>
+    <tr><td>12–24</td><td>2 微观粒子</td><td>12</td></tr>
+    <tr><td>24–36</td><td>3 化学用语</td><td>12</td></tr>
+    <tr><td>36–50</td><td>4 先写方程式，再看质量</td><td>14</td></tr>
+    <tr><td>50–62</td><td>5 化学计算</td><td>12</td></tr>
+    <tr><td>62–72</td><td>6 溶液</td><td>10</td></tr>
+    <tr><td>72–82</td><td>7 酸碱盐</td><td>10</td></tr>
+    <tr><td>82–87</td><td>8 常见物质</td><td>5</td></tr>
+    <tr><td>87–91</td><td>燃烧条件，接在氧气之后</td><td>4</td></tr>
+    <tr><td>91–97</td><td>9 金属活动性，接铁与硫酸铜</td><td>6</td></tr>
+    <tr><td>97–103</td><td>10 实验基础</td><td>6</td></tr>
+    <tr><td>103–106</td><td>11 化肥、材料与环境</td><td>3</td></tr>
+    <tr><td>106–110</td><td>回看关联，进入医用化学第1章</td><td>4</td></tr>
+  </table>
+</article>
+</div>
+<nav class="chrome">
+  <button id="prev" type="button">上一页</button>
+  <button id="next" type="button">下一页</button>
+  <div id="progress"><div id="bar"></div></div>
+  <span id="count"></span>
+  <button id="full" type="button">全屏</button>
+  <button id="print" type="button">打印</button>
+</nav>
+<script>
+const source = document.getElementById('slides');
+const scaler = document.getElementById('scaler');
+const slides = Array.from(source.children);
+source.remove();
+slides.forEach(slide => scaler.appendChild(slide));
+let index = 0;
+const count = document.getElementById('count');
+const bar = document.getElementById('bar');
+function fit() {
+  const nav = document.querySelector('.chrome').offsetHeight;
+  const scale = Math.min(window.innerWidth / 1600, (window.innerHeight - nav) / 900);
+  scaler.style.transform = 'scale(' + scale + ')';
+}
+function render() {
+  slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+  count.textContent = (index + 1) + ' / ' + slides.length;
+  bar.style.width = ((index + 1) / slides.length * 100) + '%';
+  fit();
+}
+function go(step) {
+  index = Math.max(0, Math.min(slides.length - 1, index + step));
+  render();
+}
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+document.getElementById('print').onclick = () => window.print();
+document.getElementById('full').onclick = () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+};
+window.addEventListener('keydown', event => {
+  const target = event.target;
+  if (target && target.classList && target.classList.contains('show-ans') && event.key === ' ') return;
+  if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') { event.preventDefault(); go(1); }
+  if (event.key === 'ArrowLeft' || event.key === 'PageUp') { event.preventDefault(); go(-1); }
+  if (event.key === 'Home') { index = 0; render(); }
+  if (event.key === 'End') { index = slides.length - 1; render(); }
+});
+document.addEventListener('click', event => {
+  const button = event.target.closest('.show-ans');
+  if (!button) return;
+  const answer = button.nextElementSibling;
+  answer.classList.toggle('open');
+  button.textContent = answer.classList.contains('open') ? '隐藏答案' : '显示答案';
+});
+window.addEventListener('resize', fit);
+render();
+</script>
+</body>
+</html>
